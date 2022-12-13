@@ -1,4 +1,4 @@
-package ir.rev.foodMaker
+package ir.rev.foodMaker.models
 
 import java.util.UUID
 
@@ -10,7 +10,8 @@ data class Food(
     val title: String,
     val subTitle: String,
     val group: String,
-    val price: Double
+    val price: Double,
+    val isAvailability: Boolean
 )
 
 /**

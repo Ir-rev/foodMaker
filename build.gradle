@@ -3,5 +3,6 @@ apply plugin: 'org.jetbrains.kotlin.android'
 apply plugin: 'kotlin-parcelize' // парсилизация
 
 dependencies {
-
+    implementation "io.reactivex.rxjava3:rxjava:3.1.5"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3'
 }
