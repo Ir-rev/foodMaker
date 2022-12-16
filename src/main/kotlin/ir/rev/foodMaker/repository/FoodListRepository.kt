@@ -4,6 +4,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import ir.rev.foodMaker.models.Food
 import ir.rev.foodMaker.models.FoodDetails
+import ir.rev.foodMaker.models.FoodFilter
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
@@ -15,12 +16,12 @@ interface FoodListRepository {
     /**
      * подписка для ослеживания измениния списка еды
      */
-    fun getFoodListObservable(): Observable<Food>
+    fun getFoodListObservable(): Observable<Pair<List<Food>, Throwable?>>
 
     /**
      * Возвращает список еды для главного экрана
      */
-    fun subscribeFoodList(position: Int, count:Int)
+    fun subscribeFoodList(position: Int, count: Int, foodFilter: FoodFilter)
 
     /**
      * Возвращает детальную информацию об еде
