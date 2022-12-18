@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.flow
 /**
  * Реализация интерфейса [FoodListRepository]
  */
-class FoodListRepositoryImpl : FoodListRepository {
+internal class FoodListRepositoryImpl : FoodListRepository {
 
     private val foodSubject = BehaviorSubject.create<Pair<List<BaseFood>, Throwable?>>()
     private var subscribeDisposable = Disposable.disposed()

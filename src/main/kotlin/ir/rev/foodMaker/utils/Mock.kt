@@ -4,7 +4,7 @@ import ir.rev.foodMaker.models.BaseFood
 import java.util.UUID
 import kotlin.random.Random
 
-object Mock {
+internal object Mock {
 
     internal fun getFoodMock(): List<BaseFood.Food> {
         val list = mutableListOf<BaseFood.Food>()
