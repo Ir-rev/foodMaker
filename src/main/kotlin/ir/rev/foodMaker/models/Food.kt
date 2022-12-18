@@ -10,6 +10,7 @@ data class Food(
     val title: String,
     val subTitle: String,
     val group: String,
+    val imageUrl: String,
     val price: Double,
     val isAvailability: Boolean
 )
