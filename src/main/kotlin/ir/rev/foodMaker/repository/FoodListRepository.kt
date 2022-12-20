@@ -16,12 +16,12 @@ interface FoodListRepository {
     /**
      * подписка для ослеживания измениния списка еды
      */
-    fun getFoodListObservable(): Observable<Pair<List<BaseFood>, Throwable?>>
+    fun getFoodListObservable(): Observable<Pair<List<BaseFood.Food>, Throwable?>>
 
     /**
      * Возвращает список еды для главного экрана
      */
-    fun subscribeFoodList(position: Int, count: Int, foodFilter: FoodFilter)
+    fun subscribeFoodList(foodFilter: FoodFilter)
 
     /**
      * Возвращает детальную информацию об еде
@@ -31,5 +31,20 @@ interface FoodListRepository {
     /**
      * Возвращает список дополнительной еды (к примеру для "суши" предлагаем "соевый соус")
      */
-    fun getAdditionalFood(group: String): Flow<List<BaseFood>>
+    fun getAdditionalFood(group: String): Flow<List<BaseFood.AdditionalFood>>
+
+    /**
+     * Добавить еду на главный экран
+     */
+    suspend fun addFood(food: BaseFood.Food)
+
+    /**
+     * Обновить еду на главном экране
+     */
+    suspend fun updateFood(food: BaseFood.Food)
+
+    /**
+     * Удалить еду на главном экране
+     */
+    suspend fun deleteFood(food: BaseFood.Food)
 }

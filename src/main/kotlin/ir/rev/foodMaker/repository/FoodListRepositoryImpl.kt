@@ -4,6 +4,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import ir.rev.foodMaker.FoodPlugin
 import ir.rev.foodMaker.models.AboutFood
 import ir.rev.foodMaker.models.BaseFood
 import ir.rev.foodMaker.models.FoodDetails
@@ -23,36 +24,45 @@ import kotlinx.coroutines.flow.flow
  */
 internal class FoodListRepositoryImpl : FoodListRepository {
 
-    private val foodSubject = BehaviorSubject.create<Pair<List<BaseFood>, Throwable?>>()
+    private val foodSubject = BehaviorSubject.create<Pair<List<BaseFood.Food>, Throwable?>>()
     private var subscribeDisposable = Disposable.disposed()
-    private val foodList = getFoodMock()
+    private var foodDao = FoodPlugin.dataBase.foodDao
+    private var lastFoodFilter: FoodFilter = FoodFilter.default()
 
     /**
      * подписка для ослеживания измениния количества непрочитаных документов
      */
-    override fun getFoodListObservable(): Observable<Pair<List<BaseFood>, Throwable?>> = foodSubject
+    override fun getFoodListObservable(): Observable<Pair<List<BaseFood.Food>, Throwable?>> = foodSubject
 
-    override fun subscribeFoodList(position: Int, count: Int, foodFilter: FoodFilter) {
+    override fun subscribeFoodList(foodFilter: FoodFilter) {
         subscribeDisposable.dispose()
+        lastFoodFilter = foodFilter
         subscribeDisposable =
             Single.fromCallable {
                 checkInternet()
-            }.delay(Random.nextLong(500, 2000), TimeUnit.MILLISECONDS)
+            }
+                .delay(Random.nextLong(500, 2000), TimeUnit.MILLISECONDS)
+                .map {
+                    Pair(
+                        foodDao.getFoodList()
+                            .filterFoodList(foodFilter)
+                            .drop(foodFilter.position)
+                            .take(foodFilter.count),
+                        null
+                    )
+                }
                 .subscribe { it, error ->
                     foodSubject.onNext(
                         if (error != null) {
                             Pair(emptyList(), error)
                         } else {
-                            Pair(
-                                foodList.filterFoodList(foodFilter).drop(position).take(count),
-                                null
-                            )
+                            it
                         }
                     )
                 }
     }
 
-    private fun List<BaseFood>.filterFoodList(foodFilter: FoodFilter): List<BaseFood> {
+    private fun List<BaseFood.Food>.filterFoodList(foodFilter: FoodFilter): List<BaseFood.Food> {
         return this.filter { food ->
             foodFilter.title?.let { title ->
                 food.title.contains(title)
@@ -72,7 +82,7 @@ internal class FoodListRepositoryImpl : FoodListRepository {
         return Single.fromCallable { checkInternet() }
             .delay(Random.nextLong(500, 2000), TimeUnit.MILLISECONDS)
             .map {
-                getFoodMock().first() { it.id == foodId }
+                getFoodMock().first { it.id == foodId }
             }.map {
                 FoodDetails(
                     id = foodId,
@@ -87,11 +97,26 @@ internal class FoodListRepositoryImpl : FoodListRepository {
 
     }
 
-    override fun getAdditionalFood(group: String): Flow<List<BaseFood>> {
+    override fun getAdditionalFood(group: String): Flow<List<BaseFood.AdditionalFood>> {
         return flow {
             checkInternet()
             emit(Mock.getAdditionalFoodMock())
         }
+    }
+
+    override suspend fun addFood(food: BaseFood.Food) {
+        foodDao.insertFood(food)
+        subscribeFoodList(lastFoodFilter)
+    }
+
+    override suspend fun updateFood(food: BaseFood.Food) {
+        foodDao.updateFood(food)
+        subscribeFoodList(lastFoodFilter)
+    }
+
+    override suspend fun deleteFood(food: BaseFood.Food) {
+        foodDao.deleteFood(food)
+        subscribeFoodList(lastFoodFilter)
     }
 
     private fun checkInternet() {

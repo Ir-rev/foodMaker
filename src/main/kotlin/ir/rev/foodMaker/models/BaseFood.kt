@@ -1,10 +1,13 @@
 package ir.rev.foodMaker.models
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.util.UUID
 
 /**
  * Базовое Описание еды для списка на главном экране
  */
+@Entity
 sealed class BaseFood(
     val id: UUID,
     val title: String,
@@ -18,6 +21,7 @@ sealed class BaseFood(
     /**
      * Описание еды для списка на главном экране
      */
+    @Entity
     class Food(
         id: UUID,
         title: String,
@@ -33,6 +37,7 @@ sealed class BaseFood(
     /**
      * доп еда по категориям (к примеру для "суши", "соевый соус")
      */
+    @Entity
     class AdditionalFood(
         id: UUID,
         title: String,
