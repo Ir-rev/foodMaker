@@ -11,7 +11,7 @@ import ir.rev.foodMaker.models.BaseFood
 @Dao
 internal interface FoodDao {
 
-    @Query("SELECT * FROM BaseFood.Food")
+    @Query("SELECT * FROM Food")
     fun getFoodList(): List<BaseFood.Food>
 
     @Insert

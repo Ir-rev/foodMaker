@@ -7,9 +7,8 @@ import java.util.UUID
 /**
  * Базовое Описание еды для списка на главном экране
  */
-@Entity
 sealed class BaseFood(
-    val id: UUID,
+    open val id: UUID,
     val title: String,
     val subTitle: String,
     val group: String,
@@ -23,7 +22,7 @@ sealed class BaseFood(
      */
     @Entity
     class Food(
-        id: UUID,
+        @PrimaryKey override val id: UUID,
         title: String,
         subTitle: String,
         group: String,
@@ -37,7 +36,6 @@ sealed class BaseFood(
     /**
      * доп еда по категориям (к примеру для "суши", "соевый соус")
      */
-    @Entity
     class AdditionalFood(
         id: UUID,
         title: String,
