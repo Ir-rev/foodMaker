@@ -29,6 +29,15 @@ internal class FoodListRepositoryImpl : FoodListRepository {
     private var foodDao = FoodPlugin.dataBase.foodDao
     private var lastFoodFilter: FoodFilter = FoodFilter.default()
 
+    override suspend fun checkDataBaseInit(): Boolean {
+        return try {
+            foodDao.getFoodList()
+            true
+        } catch (e: Throwable) {
+            false
+        }
+    }
+
     /**
      * подписка для ослеживания измениния количества непрочитаных документов
      */

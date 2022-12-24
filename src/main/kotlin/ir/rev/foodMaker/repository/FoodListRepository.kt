@@ -14,6 +14,11 @@ import java.util.UUID
 interface FoodListRepository {
 
     /**
+     * Проверить иницилиазацию базы данных
+     */
+    suspend fun checkDataBaseInit(): Boolean
+
+    /**
      * подписка для ослеживания измениния списка еды
      */
     fun getFoodListObservable(): Observable<Pair<List<BaseFood.Food>, Throwable?>>
