@@ -12,6 +12,7 @@ object FoodPlugin {
 
     private var foodListRepositoryInstance: FoodListRepository? = null
     internal lateinit var dataBase: FoodDataBase
+    internal var applicationContext: Context? = null
 
     /**
      * Возвращает экземпляр репозитория
@@ -29,6 +30,7 @@ object FoodPlugin {
      */
     @WorkerThread
     fun initFoodDataBase(context: Context) {
+        applicationContext = context
         dataBase = Room.databaseBuilder(
             context,
             FoodDataBase::class.java, "database-name"

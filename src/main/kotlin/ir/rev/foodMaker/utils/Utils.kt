@@ -1,12 +1,11 @@
 package ir.rev.foodMaker.utils
 
-import java.net.InetAddress
+import android.content.Context
+import android.net.ConnectivityManager
+import ir.rev.foodMaker.FoodPlugin
 
 internal fun isInternetAvailable(): Boolean {
-    return try {
-        val ipAddr: InetAddress = InetAddress.getByName("google.com")
-        !ipAddr.equals("")
-    } catch (e: Exception) {
-        false
-    }
+    val networkInfo =
+        (FoodPlugin.applicationContext?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).activeNetworkInfo
+    return networkInfo != null && networkInfo.isConnected
 }
