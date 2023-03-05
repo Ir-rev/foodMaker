@@ -5,8 +5,8 @@ import io.reactivex.rxjava3.core.Single
 import ir.rev.foodMaker.models.BaseFood
 import ir.rev.foodMaker.models.FoodDetails
 import ir.rev.foodMaker.models.FoodFilter
-import kotlinx.coroutines.flow.Flow
 import java.util.UUID
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Репозиторий для получение данные об еде
@@ -52,4 +52,9 @@ interface FoodListRepository {
      * Удалить еду на главном экране
      */
     suspend fun deleteFood(food: BaseFood.Food)
+
+    /**
+     * Удалить еду на главном экране
+     */
+    suspend fun deleteFood(foodId: UUID): Boolean
 }

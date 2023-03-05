@@ -1,5 +1,6 @@
 package ir.rev.foodMaker.repository
 
+import android.util.Log
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
@@ -126,6 +127,17 @@ internal class FoodListRepositoryImpl : FoodListRepository {
     override suspend fun deleteFood(food: BaseFood.Food) {
         foodDao.deleteFood(food)
         subscribeFoodList(lastFoodFilter)
+    }
+
+    override suspend fun deleteFood(foodId: UUID): Boolean {
+        return try {
+            foodDao.deleteFood(foodDao.getFood(foodId))
+            subscribeFoodList(lastFoodFilter)
+            true
+        } catch (e: Throwable) {
+            Log.e("checkResult", "deleteFood: $e")
+            false
+        }
     }
 
     private fun checkInternet() {
